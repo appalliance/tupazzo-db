@@ -1,4 +1,4 @@
-// api/deleteTodo.js
+// api/deleteTopics.js
 import cosmosSingleton from "../../../../lib/cosmos";
 
 export default async function handler(req, res) {
@@ -8,15 +8,15 @@ export default async function handler(req, res) {
 
     const { id } = req.query;
 
-    const { resource: existingTodo } = await container.item(id, id).read();
+    const { resource: existingTopic } = await container.item(id, id).read();
 
-    if (!existingTodo) {
-      res.status(404).json({ message: "Todo not found." });
+    if (!existingTopic) {
+      res.status(404).json({ message: "Topic not found." });
       return;
     }
 
     await container.item(id, id).delete();
-    res.status(200).json({ message: "Todo deleted." });
+    res.status(200).json({ message: "Topic Deleted" });
   } else {
     res.status(405).end(); // Method Not Allowed
   }

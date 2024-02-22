@@ -14,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
-const fetchTodos = async () => {
-  const res = await fetch("/api/todos/list");
+const fetchTopics = async () => {
+  const res = await fetch("/api/Topics/list");
   return await res.json();
 };
 
-const createTodo = async (title) => {
-  const res = await fetch("/api/todos/create", {
+const createTopic = async (title) => {
+  const res = await fetch("/api/Topics/create", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title }),
@@ -28,37 +28,37 @@ const createTodo = async (title) => {
   return await res.json();
 };
 
-const updateTodo = async (id, updatedTodo) => {
-  await fetch(`/api/todos/update/${id}`, {
+const updateTopic = async (id, updatedTopic) => {
+  await fetch(`/api/Topics/update/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedTodo),
+    body: JSON.stringify(updatedTopic),
   });
 };
 
-const deleteTodo = async (id) => {
-  await fetch(`/api/todos/delete/${id}`, { method: "DELETE" });
+const deleteTopic = async (id) => {
+  await fetch(`/api/Topics/delete/${id}`, { method: "DELETE" });
 };
 
 export default function Home() {
-  const [todos, setTodos] = useState([]);
+  const [Topics, setTopics] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const toast = useToast();
 
   useEffect(() => {
     (async () => {
-      const todos = await fetchTodos();
-      setTodos(todos);
+      const Topics = await fetchTopics();
+      setTopics(Topics);
     })();
   }, []);
 
   const handleCreate = async () => {
     if (inputValue.trim()) {
-      const newTodo = await createTodo(inputValue);
-      setTodos([...todos, newTodo]);
+      const newTopic = await createTopic(inputValue);
+      setTopics([...Topics, newTopic]);
       setInputValue("");
       toast({
-        title: "Todo created.",
+        title: "Topic created.",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -67,21 +67,21 @@ export default function Home() {
   };
 
   const handleUpdate = async (id, completed) => {
-    const updatedTodo = todos.find((todo) => todo.id === id);
-    updatedTodo.completed = completed;
-    await updateTodo(id, updatedTodo);
-    setTodos([...todos]);
+    const updatedTopic = Topics.find((Topic) => Topic.id === id);
+    updatedTopic.completed = completed;
+    await updateTopic(id, updatedTopic);
+    setTopics([...Topics]);
   };
 
   const handleDelete = async (id) => {
-    await deleteTodo(id);
-    setTodos(todos.filter((todo) => todo.id !== id));
+    await deleteTopic(id);
+    setTopics(Topics.filter((Topic) => Topic.id !== id));
   };
 
   return (
     <Box>
       <Heading mt={8} textAlign="center">
-        Azure Cosmos DB Starter – Todo App
+        Azure Cosmos DB Starter – Topic App
       </Heading>
       <VStack mt={4} spacing={4} mx="auto" maxW="md">
         <Input
@@ -91,21 +91,21 @@ export default function Home() {
           onKeyDown={(e) => e.key === "Enter" && handleCreate()}
         />
         <Button onClick={handleCreate} colorScheme="blue">
-          Add Todo
+          Add Topic
         </Button>
-        {todos.map((todo) => (
-          <HStack key={todo.id} w="100%">
+        {Topics.map((Topic) => (
+          <HStack key={Topic.id} w="100%">
             <Checkbox
-              isChecked={todo.completed}
-              onChange={(e) => handleUpdate(todo.id, e.target.checked)}
+              isChecked={Topic.completed}
+              onChange={(e) => handleUpdate(Topic.id, e.target.checked)}
             >
-              {todo.title}
+              {Topic.title}
             </Checkbox>
             <Spacer />
             <IconButton
-              aria-label="Delete todo"
+              aria-label="Delete Topic"
               icon={<DeleteIcon />}
-              onClick={() => handleDelete(todo.id)}
+              onClick={() => handleDelete(Topic.id)}
               colorScheme="red"
             />
           </HStack>
